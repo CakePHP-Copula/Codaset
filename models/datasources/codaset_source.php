@@ -21,26 +21,80 @@ class CodasetSource extends DataSource {
 	var $config = array();
 	
 	var $_schema = array(
-		'tweets' => array(
-			'id' => array(
+		'projects' => array(
+			'title' => array(
+				'type' => 'string',
+				'null' => false,
+				'key' => 'primary',
+				'length' => 255,
+			),
+			'description' => array(
+				'type' => 'text',
+				'null' => false,
+			),
+			'state' => array(
+				'type' => 'string',
+				'null' => true,
+				'length' => 15
+			),
+			'created_at',
+			'updated_at',
+			'last_pushed_at',
+			'fork_count' => array(
 				'type' => 'integer',
 				'null' => true,
-				'key' => 'primary',
 				'length' => 11,
 			),
-			'text' => array(
+			'ticket_count' => array(
+				'type' => 'integer',
+				'null' => true,
+				'length' => 11,
+			),
+			'default_branch' => array(
 				'type' => 'string',
 				'null' => true,
-				'key' => 'primary',
-				'length' => 140
+				'length' => 15
 			),
-			'status' => array(
+			'externally_forked_from' => array(
 				'type' => 'string',
 				'null' => true,
-				'key' => 'primary',
-				'length' => 140
+				'length' => 255,
 			),
-		)
+			'bookmark_count' => array(
+				'type' => 'integer',
+				'null' => true,
+				'length' => 11,
+			),
+			'url' => array(
+				'type' => 'string',
+				'null' => false,
+				'key' => 'primary',
+				'length' => 255,
+			),
+			'forked_from' => array(
+				'type' => 'string',
+				'null' => true,
+				'length' => 255,
+			),
+			'disk_usage' => array(
+				'type' => 'integer',
+				'null' => true,
+				'length' => 11,
+			),
+			'slug' => array(
+				'type' => 'string',
+				'null' => false,
+				'key' => 'primary',
+				'length' => 255,
+			),
+		),
+		'milestones',
+		'tickets',
+		'blogs',
+		'wiki',
+		'ssh_keys',
+		'email_aliases',
+		'logged_time',
 	);
 	
 	var $socket;
@@ -56,22 +110,68 @@ class CodasetSource extends DataSource {
 	}
 
 	function describe($model) {
-	 	return $this->_schema['tweets'];
+	 	return $this->_schema['projects'];
 	}
 	
 	function listSources() {
 		return array();
 	}
 	
-	function request($params) {
-		$response = $this->socket->get($this->baseUri . $params . '.' . $this->format);
+	/**
+	 * Sends HttpSocket requests. Builds your uri and formats the response too.
+	 *
+	 * @param string $uri 
+	 * @param array $options
+	 *		method: get, post, delete, put
+	 *		data: either in string form: "param1=foo&param2=bar" or as a keyed array: array('param1' => 'foo', 'param2' => 'bar')
+	 * @return array $response
+	 * @author Dean Sofer
+	 */
+	function _request($uri, $options = array()) {
+		$options = array_merge(array(
+			'method' => 'get',
+			'data' => array(),
+		), $options);
+		$response = $this->socket->{$options['method']}($this->baseUri . $uri . '.' . $this->format, $options['data']);
 		if ($this->format == 'json') {
 			$response = json_decode($response);
 		}
 		return $response;
 	}
 	
+	/**
+	 * Authenticates the user with Codaset using OAuth2
+	 * http://api.codaset.com/docs/oauth
+	 *
+	 * @return void
+	 * @author Dean Sofer
+	 */
+	function authenticate() {
+		
+	}
+	
+	
+	/**
+	 * Create functions
+	 *
+	 * Not sure how to specify WHAT it is you want to create yet...
+	 *
+	 * View the API for a list of required/permitted fields
+	 *
+	 * @param object $model 
+	 * @param array $fields 
+	 * @param array $values 
+	 * @return void
+	 * @author Dean Sofer
+	 */
 	function create($model, $fields = array(), $values = array()) {
+		
+		// TODO: Requires OAUTH2 Authentication first
+		$uri = '/' . $data['username'];
+		$options['method'] = 'post';
+		$options['data'] = array_combine($fields, $values);
+		
+		return $this->_request($uri, $options);
 	}
 	
 	/**
@@ -82,9 +182,9 @@ class CodasetSource extends DataSource {
 	 *	fields: wiki, tickets, milestones, blog, projects, collaborations, followers, followings, friends, bookmarks
 	 *		Use Strings Only, Example: 'fields' => 'projects'
 	 *
-	 * @param string $model 
-	 * @param string $queryData 
-	 * @return void
+	 * @param object $model 
+	 * @param array $queryData 
+	 * @return array $response
 	 * @author Dean Sofer
 	 */
 	function read($model, $queryData = array()) {
@@ -99,7 +199,7 @@ class CodasetSource extends DataSource {
 		if (!empty($queryData['fields']))
 			$uri .= '/' . $queryData['fields'];
 			
-		return $this->request($uri);
+		return $this->_request($uri);
 	}
 	
 	function update($model, $fields = array(), $values = array()) {
