@@ -134,7 +134,7 @@ class CodasetSource extends DataSource {
 		), $options);
 		$response = $this->socket->{$options['method']}($this->baseUri . $uri . '.' . $this->format, $options['data']);
 		if ($this->format == 'json') {
-			$response = json_decode($response);
+			$response = json_decode($response, true);
 		}
 		return $response;
 	}
