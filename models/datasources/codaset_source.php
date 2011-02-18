@@ -88,13 +88,13 @@ class CodasetSource extends DataSource {
 				'length' => 255,
 			),
 		),
-		'milestones',
-		'tickets',
-		'blogs',
-		'wiki',
-		'ssh_keys',
-		'email_aliases',
-		'logged_time',
+		'milestones' => array(),
+		'tickets' => array(),
+		'blogs' => array(),
+		'wiki' => array(),
+		'ssh_keys' => array(),
+		'email_aliases' => array(),
+		'logged_time' => array(),
 	);
 	
 	var $socket;
@@ -114,7 +114,7 @@ class CodasetSource extends DataSource {
 	}
 	
 	function listSources() {
-		return array();
+		return array_keys($this->_schema);
 	}
 	
 	/**
@@ -134,7 +134,7 @@ class CodasetSource extends DataSource {
 		), $options);
 		$response = $this->socket->{$options['method']}($this->baseUri . $uri . '.' . $this->format, $options['data']);
 		if ($this->format == 'json') {
-			$response = json_decode($response);
+			$response = json_decode($response, true);
 		}
 		return $response;
 	}
