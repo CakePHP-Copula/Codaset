@@ -9,7 +9,7 @@
  * @version $Id$
  * @copyright 
  **/
-class CodasetSource extends DataSource {
+class Codaset extends ApisSource {
 
 	/**
 	 * Array containing the names of components this component uses. Component names
@@ -97,48 +97,22 @@ class CodasetSource extends DataSource {
 		'logged_time' => array(),
 	);
 	
-	var $socket;
-	var $baseUri = 'https://api.codaset.com';
-	var $format = 'json'; // json | xml
-	
-	function __construct($config) {
-		App::import('Core', 'HttpSocket');
-		$this->socket = new HttpSocket();
-		if (isset($config['base_uri']))
-			$this->baseUri = $config['base_uri'];
-		parent::__construct($config);
-	}
-
-	function describe($model) {
-	 	return $this->_schema['projects'];
-	}
-	
-	function listSources() {
-		return array_keys($this->_schema);
-	}
-	
 	/**
-	 * Sends HttpSocket requests. Builds your uri and formats the response too.
-	 *
-	 * @param string $uri 
-	 * @param array $options
-	 *		method: get, post, delete, put
-	 *		data: either in string form: "param1=foo&param2=bar" or as a keyed array: array('param1' => 'foo', 'param2' => 'bar')
-	 * @return array $response
-	 * @author Dean Sofer
-	 */
-	function _request($uri, $options = array()) {
-		$options = array_merge(array(
-			'method' => 'get',
-			'data' => array(),
-		), $options);
-		$response = $this->socket->{$options['method']}($this->baseUri . $uri . '.' . $this->format, $options['data']);
-		if ($this->format == 'json') {
-			$response = json_decode($response, true);
-		}
-		return $response;
-	}
+     * The http client options
+     * @var array
+     */
+    protected $options = array(
+        'protocol'   => 'https',
+        'format'     => 'json',
+        'user_agent' => 'cakephp codaset datasource',
+        'http_port'  => 80,
+        'timeout'    => 10,
+        'login'      => null,
+        'token'      => null
+    );
 	
+    protected $url = ':protocol://api.codaset.com/:path/.:format';
+    
 	/**
 	 * Authenticates the user with Codaset using OAuth2
 	 * http://api.codaset.com/docs/oauth

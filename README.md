@@ -3,13 +3,14 @@
 ## Installation
 
 1. Clone/download the plugin to `plugins/codaset`
-
-2. Add your configuration to `database.php` and set it to the model
+2. Clone/download the [apis plugin](https://github.com/ProLoser/CakePHP-Api-Datasources) to `plugins/apis`
+3. Add your configuration to `database.php` and set it to the model
 
 <pre><code>
 :: database.php ::
 var $codaset = array(
-	'datasource' => 'Codaset.Codaset',
+	'datasource' => 'Apis.Apis',
+	'driver' => 'Codaset.Codaset',
 	// These are only required for authenticated requests (write-access)
 	'login' => '--Your API Key--',
 	'password' => '--Your API Secret--',
