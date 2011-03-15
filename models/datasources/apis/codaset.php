@@ -108,10 +108,12 @@ class Codaset extends ApisSource {
         'http_port'  => 80,
         'timeout'    => 10,
         'login'      => null,
-        'token'      => null
+        'token'      => null,
+        'param_separator' => '/',
+		'key_value_separator'	=> '=',
     );
 	
-    protected $url = ':protocol://api.codaset.com/:path/.:format';
+    protected $url = ':protocol://api.codaset.com/:path.:format';
     
 	/**
 	 * Authenticates the user with Codaset using OAuth2
@@ -163,16 +165,12 @@ class Codaset extends ApisSource {
 	 */
 	function read($model, $queryData = array()) {
 		$uri = '';
-		
 		if (!empty($queryData['conditions']['username']))
 			$uri .= '/' . $queryData['conditions']['username'];
-
 		if (!empty($queryData['conditions']['project']))
 			$uri .= '/' . $queryData['conditions']['project'];
-			
 		if (!empty($queryData['fields']))
 			$uri .= '/' . $queryData['fields'];
-			
 		return $this->_request($uri);
 	}
 	
