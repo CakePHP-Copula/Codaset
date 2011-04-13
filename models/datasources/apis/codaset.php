@@ -10,15 +10,6 @@
  * @copyright 
  **/
 class Codaset extends ApisSource {
-
-	/**
-	 * Array containing the names of components this component uses. Component names
-	 * should not contain the "Component" portion of the classname.
-	 *
-	 * @var array
-	 * @access public
-	 */
-	var $config = array();
 	
 	var $_schema = array(
 		'projects' => array(
@@ -112,17 +103,6 @@ class Codaset extends ApisSource {
     );
 	
     protected $url = ':protocol://api.codaset.com/:path/.:format';
-    
-	/**
-	 * Authenticates the user with Codaset using OAuth2
-	 * http://api.codaset.com/docs/oauth
-	 *
-	 * @return void
-	 * @author Dean Sofer
-	 */
-	function authenticate() {
-		
-	}
 	
 	
 	/**
@@ -175,10 +155,15 @@ class Codaset extends ApisSource {
 			
 		return $this->_request($uri);
 	}
-	
-	function update($model, $fields = array(), $values = array()) {
-	}
-	
-	function delete($model, $id = null) {
+    
+	/**
+	 * Authenticates the user with Codaset using OAuth2
+	 * http://api.codaset.com/docs/oauth
+	 *
+	 * @return void
+	 * @author Dean Sofer
+	 */
+	function authenticate() {
+		
 	}
 }
