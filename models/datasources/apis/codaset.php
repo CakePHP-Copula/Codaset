@@ -93,13 +93,13 @@ class Codaset extends ApisSource {
      * @var array
      */
     protected $options = array(
-        'protocol'   => 'https',
-        'format'     => 'json',
-        'user_agent' => 'cakephp codaset datasource',
-        'http_port'  => 80,
-        'timeout'    => 10,
-        'login'      => null,
-        'token'      => null,
+        'protocol'   			=> 'https',
+        'format'     			=> 'json',
+        'user_agent' 			=> 'cakephp codaset datasource',
+        'http_port'  			=> 80,
+        'timeout'    			=> 10,
+        'login'      			=> null,
+        'token'      			=> null,
 		'param_separator'		=> '/',
 		'key_value_separator'	=> null,
     );
@@ -145,16 +145,12 @@ class Codaset extends ApisSource {
 	 */
 	function read($model, $queryData = array()) {
 		$uri = '';
-		
 		if (!empty($queryData['conditions']['username']))
 			$uri .= '/' . $queryData['conditions']['username'];
-
 		if (!empty($queryData['conditions']['project']))
 			$uri .= '/' . $queryData['conditions']['project'];
-			
 		if (!empty($queryData['fields']))
 			$uri .= '/' . $queryData['fields'];
-			
 		return $this->_request($uri);
 	}
     
