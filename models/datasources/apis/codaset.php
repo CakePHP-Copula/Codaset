@@ -99,10 +99,12 @@ class Codaset extends ApisSource {
         'http_port'  => 80,
         'timeout'    => 10,
         'login'      => null,
-        'token'      => null
+        'token'      => null,
+		'param_separator'		=> '/',
+		'key_value_separator'	=> null,
     );
 	
-    protected $url = ':protocol://api.codaset.com/:path/.:format';
+    protected $url = ':protocol://api.codaset.com/:path.:format';
 	
 	
 	/**
