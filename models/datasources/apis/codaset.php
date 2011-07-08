@@ -92,7 +92,7 @@ class Codaset extends ApisSource {
      * The http client options
      * @var array
      */
-    protected $options = array(
+    public $options = array(
         'protocol'   			=> 'https',
         'format'     			=> 'json',
         'user_agent' 			=> 'cakephp codaset datasource',
