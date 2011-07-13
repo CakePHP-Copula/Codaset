@@ -87,81 +87,17 @@ class Codaset extends ApisSource {
 		'email_aliases' => array(),
 		'logged_time' => array(),
 	);
-	
+
 	/**
-     * The http client options
-     * @var array
-     */
-    public $options = array(
-        'protocol'   			=> 'https',
-        'format'     			=> 'json',
-        'user_agent' 			=> 'cakephp codaset datasource',
-        'http_port'  			=> 80,
-        'timeout'    			=> 10,
-        'login'      			=> null,
-        'token'      			=> null,
-		'param_separator'		=> '/',
-		'key_value_separator'	=> null,
-    );
-	
-    protected $url = ':protocol://api.codaset.com/:path.:format';
-	
-	
-	/**
-	 * Create functions
+	 * Stores the queryData so that the tokens can be substituted just before requesting
 	 *
-	 * Not sure how to specify WHAT it is you want to create yet...
-	 *
-	 * View the API for a list of required/permitted fields
-	 *
-	 * @param object $model 
-	 * @param array $fields 
-	 * @param array $values 
-	 * @return void
+	 * @param string $model 
+	 * @param string $queryData 
+	 * @return mixed $data
 	 * @author Dean Sofer
 	 */
-	function create($model, $fields = array(), $values = array()) {
-		
-		// TODO: Requires OAUTH2 Authentication first
-		$uri = '/' . $data['username'];
-		$options['method'] = 'post';
-		$options['data'] = array_combine($fields, $values);
-		
-		return $this->_request($uri, $options);
-	}
-	
-	/**
-	 * Use $Model->find('all') for all queries
-	 *
-	 * Used Options:
-	 *	conditions: username, project
-	 *	fields: wiki, tickets, milestones, blog, projects, collaborations, followers, followings, friends, bookmarks
-	 *		Use Strings Only, Example: 'fields' => 'projects'
-	 *
-	 * @param object $model 
-	 * @param array $queryData 
-	 * @return array $response
-	 * @author Dean Sofer
-	 */
-	function read($model, $queryData = array()) {
-		$uri = '';
-		if (!empty($queryData['conditions']['username']))
-			$uri .= '/' . $queryData['conditions']['username'];
-		if (!empty($queryData['conditions']['project']))
-			$uri .= '/' . $queryData['conditions']['project'];
-		if (!empty($queryData['fields']))
-			$uri .= '/' . $queryData['fields'];
-		return $this->_request($uri);
-	}
-    
-	/**
-	 * Authenticates the user with Codaset using OAuth2
-	 * http://api.codaset.com/docs/oauth
-	 *
-	 * @return void
-	 * @author Dean Sofer
-	 */
-	function authenticate() {
-		
+	public function read(&$model, $queryData = array()) {
+		$this->tokens = $queryData['conditions'];
+		return parent::read($model, $queryData);
 	}
 }
